@@ -6,5 +6,6 @@ import { EventLog } from './event-log.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([EventLog])],
   providers: [EventLogService],
+  exports: [EventLogService],
 })
 export class EventLogModule {}
