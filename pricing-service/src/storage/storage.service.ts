@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { MaterialType } from './enums/material-type.enum';
 import { EventLogService } from '../event-log/event-log.service';
-import { EventLogInterface } from '../event-log/types/event-log.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Material } from './entities/material.entity';
+import { MaterialTitle } from './enums/material-title.enum';
+import { MaterialInterface } from './types/material.interface';
 
 @Injectable()
 export class StorageService {
@@ -13,14 +14,31 @@ export class StorageService {
     private readonly eventLogService: EventLogService,
   ) {}
 
-  async create(event: EventLogInterface) {
-    await this.eventLogService.create(event);
+  async create(material: MaterialInterface) {
+    const materialEntity = this.materialRepository.create(material);
+    await Promise.all([
+      this.eventLogService.create({
+        material: material.title,
+        quantity: material.quantity,
+      }),
+      this.materialRepository.save(materialEntity),
+    ]);
   }
 
-  async getQuantity(material: MaterialType) {
-    const { quantity } = await this.eventLogService.getLastEvent(material);
+  async getQuantity(materialTitle: MaterialTitle) {
+    const { quantity } = await this.materialRepository.findOne({
+      where: {
+        title: materialTitle,
+      },
+    });
     return quantity;
   }
 
-  async updateQuantity(material: MaterialType) {}
+  async increaseQuantity(title: string, amount: number) {
+    await this.materialRepository.increment({ title }, 'quantity', amount);
+  }
+
+  async decreaseQuantity(title: string, amount: number) {
+    await this.materialRepository.decrement({ title }, 'quantity', amount);
+  }
 }

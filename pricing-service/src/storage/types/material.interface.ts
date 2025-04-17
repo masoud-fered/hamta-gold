@@ -1,4 +1,4 @@
-export interface EventLogInterface {
-  material: string;
+export interface MaterialInterface {
+  title: string;
   quantity: number;
 }

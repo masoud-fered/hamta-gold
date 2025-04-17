@@ -1,4 +1,4 @@
-export enum MaterialType {
+export enum MaterialTitle {
   GOLD = 'XAU',
   SILVER = 'XAG',
   PLATINUM = 'XPT',
