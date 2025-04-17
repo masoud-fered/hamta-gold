@@ -11,7 +11,7 @@ export class Material {
   id: number;
 
   @Column()
-  material: string;
+  title: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
   quantity: number;

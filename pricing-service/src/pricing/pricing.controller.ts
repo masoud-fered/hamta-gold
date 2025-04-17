@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { PricingFacade } from './pricing.facade';
-import { EventLogInterface } from '../../../market-data-service/src/event-log/types/event-log.interface';
+import { EventLogInterface } from './types/event-log.interface';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 import { PricingService } from './pricing.service';
 import { StorageService } from '../storage/storage.service';
@@ -14,11 +14,11 @@ export class PricingController {
   ) {}
 
   @EventPattern('material-price-update')
-  onPriceUpdated(
+  async onPriceUpdated(
     @Payload() event: EventLogInterface,
     @Ctx() context: RmqContext,
   ) {
-    const quantity = this.storageService.getQuantity();
+    const quantity = await this.storageService.getQuantity(event.material);
     const result = this.pricingService.calculatePrice(event.price, quantity);
     console.log(event);
     console.log(context);

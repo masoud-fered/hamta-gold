@@ -3,11 +3,10 @@ import { PricingService } from './pricing.service';
 import { PricingController } from './pricing.controller';
 import { PricingFacade } from './pricing.facade';
 import { StorageModule } from '../storage/storage.module';
-import { StorageService } from '../storage/storage.service';
 
 @Module({
-  imports: [StorageModule],
-  providers: [StorageService, PricingService, PricingFacade],
+  imports: [StorageModule, StorageModule],
+  providers: [PricingService, PricingFacade],
   controllers: [PricingController],
 })
 export class PricingModule {}
